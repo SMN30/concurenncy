@@ -24,7 +24,6 @@ func PingPong(w io.Writer) {
 			pong <- true
 
 		}
-		//	fmt.Println("Горутина Ping завершилась")
 	}()
 
 	go func() {
@@ -36,7 +35,6 @@ func PingPong(w io.Writer) {
 				ping <- true
 			}
 		}
-		//	fmt.Println("Горутина Pong завершилась")
 	}()
 
 	ping <- true
@@ -45,6 +43,4 @@ func PingPong(w io.Writer) {
 
 func main() {
 	PingPong(os.Stdout)
-	//wg.Wait()
-	//	time.Sleep(time.Second * 3)
 }

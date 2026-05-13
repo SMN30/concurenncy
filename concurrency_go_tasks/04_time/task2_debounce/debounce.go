@@ -14,19 +14,17 @@ func Debounce(d time.Duration, in <-chan int) <-chan int {
 
 		var value int
 		timer := time.NewTimer(d)
-		// Сразу останавливаем, так как данных еще нет
 		if !timer.Stop() {
 			<-timer.C
 		}
 
-		var active bool // Флаг, есть ли у нас значение, которое ждет отправки
+		var active bool
 
 		for {
 			select {
 			case v, ok := <-in:
 				if !ok {
 					if active {
-						// Если канал закрылся, но есть значение — ждем таймер
 						<-timer.C
 						out <- value
 					}
@@ -36,7 +34,6 @@ func Debounce(d time.Duration, in <-chan int) <-chan int {
 				value = v
 				active = true
 
-				// Перезапускаем таймер. Stop + Reset — стандарт Go.
 				timer.Stop()
 				select {
 				case <-timer.C:
@@ -46,7 +43,7 @@ func Debounce(d time.Duration, in <-chan int) <-chan int {
 
 			case <-timer.C:
 				out <- value
-				active = false // Значение отправлено, больше ничего не ждем
+				active = false
 			}
 		}
 	}()

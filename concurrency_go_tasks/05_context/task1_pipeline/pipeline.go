@@ -8,8 +8,6 @@ import "context"
 func Run(ctx context.Context, nums []int) (int, error) {
 	// TODO: реализовать конвейер с остановкой по ctx
 
-	// Стадия 1: Удвоение
-	// Используем вспомогательный канал, чтобы передавать данные во вторую стадию
 	doubled := make(chan int)
 
 	go func() {
@@ -23,8 +21,6 @@ func Run(ctx context.Context, nums []int) (int, error) {
 		}
 	}()
 
-	// Стадия 2: Суммирование
-	// Читаем из канала doubled и аккумулируем результат
 	total := 0
 	for {
 		select {
@@ -32,7 +28,6 @@ func Run(ctx context.Context, nums []int) (int, error) {
 			return 0, ctx.Err()
 		case val, ok := <-doubled:
 			if !ok {
-				// Канал закрыт, данные закончились — возвращаем результат
 				return total, nil
 			}
 			total += val

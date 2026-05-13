@@ -14,7 +14,6 @@ var (
 func Init() {
 	// TODO: инициализировать ресурс через sync.Once
 	once.Do(func() {
-		// Инициализация вашего ресурса здесь
 		mu.Lock()
 		initialized = true
 		mu.Unlock()

@@ -20,5 +20,4 @@ func Work(ctx context.Context) error {
 	case <-ctx.Done():
 		return ErrCanceled
 	}
-	//return nil
 }

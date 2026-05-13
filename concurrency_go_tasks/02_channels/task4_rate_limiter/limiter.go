@@ -16,17 +16,14 @@ type Limiter struct {
 func NewLimiter() *Limiter {
 	// TODO: инициализировать канал токенов и запуск пополнения
 	l := &Limiter{
-		// Канал с буфером на 5 токенов
 		tokens: make(chan struct{}, 5),
 		done:   make(chan struct{}),
 	}
 
-	// Сразу заполняем "бак" начальными токенами
 	for i := 0; i < 5; i++ {
 		l.tokens <- struct{}{}
 	}
 
-	// Запускаем фоновое пополнение: 1 токен каждые 200мс (итого 5 в сек)
 	go func() {
 		ticker := time.NewTicker(200 * time.Millisecond)
 		defer ticker.Stop()
@@ -36,9 +33,9 @@ func NewLimiter() *Limiter {
 			case <-ticker.C:
 				select {
 				case l.tokens <- struct{}{}:
-					// Токен добавлен
+
 				default:
-					// Бак полон, пропускаем тик
+
 				}
 			case <-l.done:
 				return

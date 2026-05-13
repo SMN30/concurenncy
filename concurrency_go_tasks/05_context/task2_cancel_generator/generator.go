@@ -13,16 +13,12 @@ func Generate(ctx context.Context) <-chan int {
 
 		var n int
 		for {
-			// Неблокирующая проверка отмены контекста перед попыткой отправки.
-			// Это гарантирует мгновенный выход и закрытие канала через defer,
-			// если контекст уже был отменен (до старта или в процессе).
 			select {
 			case <-ctx.Done():
 				return
 			default:
 			}
 
-			// Основной блокирующий select для отправки данных
 			select {
 			case <-ctx.Done():
 				return
