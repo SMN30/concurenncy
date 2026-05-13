@@ -1,6 +1,9 @@
 package scheduler
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 // Every запускает f каждые d и возвращает функцию для остановки.
 func Every(d time.Duration, f func()) (stop func()) {
@@ -8,23 +11,25 @@ func Every(d time.Duration, f func()) (stop func()) {
 	// Канал для сигнала об остановке
 	done := make(chan struct{})
 
-	// Создаем тикер
-	ticker := time.NewTicker(d)
-
+	var once sync.Once
 	go func() {
+		ticker := time.NewTicker(d)
+		defer ticker.Stop() // Важно остановить тикер для освобождения ресурсов
+
 		for {
 			select {
 			case <-ticker.C:
 				f()
 			case <-done:
-				ticker.Stop() // Важно остановить тикер, чтобы освободить ресурсы
 				return
 			}
 		}
 	}()
 
-	// Возвращаем функцию, которая при вызове закроет канал done
+	// Возвращаем замыкание, которое сигнализирует горутине о выходе
 	return func() {
-		close(done)
+		once.Do(func() {
+			close(done)
+		})
 	}
 }
