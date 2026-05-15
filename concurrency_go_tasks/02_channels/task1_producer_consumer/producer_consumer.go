@@ -20,6 +20,6 @@ func Run(w io.Writer) {
 	}()
 
 	for j := range ch {
-		fmt.Fprintln(w, j)
+		_, _ = fmt.Fprintln(w, j)
 	}
 }

@@ -7,8 +7,8 @@ func Fib(n int) <-chan int {
 	go func() {
 		defer close(ch)
 
-		var n1 int = 0
-		var n2 int = 1
+		n1 := 0
+		n2 := 1
 
 		for i := 0; i < n; i++ {
 			tmp := n1

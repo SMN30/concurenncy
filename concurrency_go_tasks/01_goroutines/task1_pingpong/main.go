@@ -20,7 +20,7 @@ func PingPong(w io.Writer) {
 		defer wg.Done()
 		for i := 0; i < 5; i++ {
 			<-ping
-			fmt.Fprintln(w, "ping")
+			_, _ = fmt.Fprintln(w, "ping")
 			pong <- true
 
 		}
@@ -30,7 +30,7 @@ func PingPong(w io.Writer) {
 		defer wg.Done()
 		for i := 0; i < 5; i++ {
 			<-pong
-			fmt.Fprintln(w, "pong")
+			_, _ = fmt.Fprintln(w, "pong")
 			if i < 4 {
 				ping <- true
 			}
